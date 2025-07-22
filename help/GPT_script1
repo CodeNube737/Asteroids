@@ -1,0 +1,48 @@
+so that was a great success! Now I want you not write code for me but to guide me to develop my own code for this next part.
+
+For the next part of this developper project, i want to create a system of files called "AsteroidBelt".
+Asteroid Belt will create asteroids (a vector of what is likely openCV circles) that all have similar properties). They must: 
+ - start in a different spot along the top of the screen
+ - each have a different size and border color (no fill)
+ - move in a random direction endlessly, unless  the asteroid(s) crashes into another astroid (circle-boundary hits circle-boundary)
+	~ in this case (collision) all colliding asteroids get erased, and a new asteroid replaces each erased asteroid. the new asteroids have new properties, starting from a new position along the top of the screen
+The game keeps a count of every asteroid destroyed, and displays that count at the top of the screen.
+
+As per my understanding of C++/OOP architecture, this contains:
+ - main.cpp (runs just like the Spaceship/metroid code directly above this instruction)
+ - AsteroidBelt.h (contains class definition of Asteroid vector and all ot members)
+ - AsteroidBelt.cpp has all the implementation needed.
+
+This, from my experiences, is the best way to setup my code. However, feel free to give me the direction to make an even better structured code.
+Feel free to point me to sources in GitHub and OpenStacks for code and functions. Feel free to ask me to go to these websites and search for code myself.
+Ultimately, this should be a good learning experience.
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+
+That sounds like a great project! Your understanding of the C++/OOP architecture is correct. Here's a high-level guide on how you might structure your code:
+
+1. **Asteroid Class (Asteroid.h and Asteroid.cpp):** This class will represent a single asteroid. It should have properties like position, size, color, and velocity. You can use OpenCV's `cv::Point` for position and velocity, and `cv::Scalar` for color. You'll also need methods to move the asteroid and detect collisions.
+
+2. **AsteroidBelt Class (AsteroidBelt.h and AsteroidBelt.cpp):** This class will manage all the asteroids. It should have a `std::vector` of Asteroid objects. You'll need methods to add new asteroids, update the position of all asteroids, detect and handle collisions, and draw all asteroids on the screen.
+
+3. **Main Function (main.cpp):** This function will create an instance of the AsteroidBelt class and call its methods in a loop. You'll also need to handle user input and display the score.
+
+Here are some tips for each part:
+
+- **Asteroid Class:** To move the asteroid, you can add its velocity to its position. To detect collisions, you can calculate the distance between the centers of two asteroids and compare it to their radii. OpenCV has functions to draw circles and generate random numbers, which will be useful.
+
+- **AsteroidBelt Class:** To add a new asteroid, you can generate random properties and push a new Asteroid object to the back of the vector. To update asteroids, you can loop through the vector and call each asteroid's move method. To detect collisions, you can use a nested loop to check each pair of asteroids. If a collision is detected, you can erase the asteroids from the vector and add new ones.
+
+- **Main Function:** You can use OpenCV's `cv::waitKey` function to get user input and `cv::imshow` to display the image. You'll need to create a loop where you clear the image, update the AsteroidBelt, draw the new frame, and handle user input.
+
+Remember, these are just guidelines. Feel free to modify them as needed. As you code, you'll likely encounter challenges that require you to come up with creative solutions. That's part of the fun of programming!
+
+For learning and reference, you can explore GitHub repositories related to game development, OpenCV, and physics simulations. Websites like Stack Overflow and the OpenCV documentation are also great resources when you're stuck.
+
+Good luck with your project! If you have any questions or run into any issues, don't hesitate to ask. I'm here to help! 
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+
+Next set of questions for chat GPT

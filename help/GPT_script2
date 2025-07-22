@@ -1,0 +1,23 @@
+Can you change the method below so that it randomly generates an asteroid with the following values: 
+ - radius between 20 and 40
+ - position.x between 0 and _guiSize.width
+ - velocity.x between -5 and 5
+ - velocity.y between -5 and 5
+ - any random cv::Scalar value for color
+
+
+
+void AsteroidBelt::generateAsteroid() // currently setup for only one asteroid
+{
+    // Create a new asteroid with random properties
+    int rad = 90/* OR generate random radius */;
+    cv::Point pos = cv::Point(_guiSize.width/2, HORIZON_Y)/* OR generate random position */;
+    cv::Point vel = cv::Point(3, 3)/* OR generate random velocity */;
+    cv::Scalar col = cv::Scalar(255,150,23)/* OR generate random color */;
+
+    // Create the asteroid object
+    asteroid newAsteroid(rad, pos, vel, col);
+
+    // Add the new asteroid to the vector
+    Asteroids.push_back(newAsteroid);
+}
