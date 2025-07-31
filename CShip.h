@@ -4,7 +4,8 @@
 #define max_velocity 10
 #define ACCELERATION 1
 #define SHIP_RADIUS 10
-#define SHIP_COLOR cv::Scalar(0, 165, 255)
+#define ORANGE_METR cv::Scalar(0, 165, 255)
+#define SHIP_COLOR ORANGE_METR
 
 
 class Spaceship
