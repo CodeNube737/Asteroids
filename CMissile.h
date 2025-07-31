@@ -2,6 +2,11 @@
 #pragma once
 #include <opencv2/opencv.hpp>
 
+#define LENGTH_MISSILE 6
+#define SPEED_MISSILE 20
+#define COLOR_LASER cv::Scalar(0, 0, 255)
+#define THICK_LASER 2
+
 class missile
 {
 
@@ -9,14 +14,12 @@ private:
     int length;
     cv::Point postion;
     cv::Point velocity;
-    const cv::Scalar color; // cv::Scalar(0, 0, 255)
 
 public:
-    missile(int len, cv::Point pos, cv::Point vel, cv::Scalar col) :
-    lenth(len),
+    missile(int len, cv::Point pos, cv::Point vel) :
+    length(len),
     postion(pos),
-    velocity(vel),
-    color(col)
+    velocity(vel)
 {}
 
     //gets & sets

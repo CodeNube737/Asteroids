@@ -22,13 +22,13 @@ public:
     CAsteroidsGame(cv::Point position);
 
     // Methods
-    void run();
-    void update();
-    void draw(cv::Mat& img);
-    void userInput(char direction);
-    void moveShip(int window_width, int window_height);
+    void run(); // loops update and draw
+    void update(); // gets user input & updates all positions & detects colission
+    void draw(cv::Mat& img); // draws everything that was updated
+    void userInput(char direction); // gets a single user input every loop
+    void moveShip(int window_width, int window_height); // updates the position of the ship based on velocity
     void generateLaser(); // handles construction of new laser beams.
-    void moveLasers(); // updates the posiion of every asteroid based on velocity
-    void detectCollisions(); // handles destruction of missiles if there are collision(s)
+    void moveLasers(); // updates the position of every missile/laser based on velocity
+    void detectCollisions(int window_height); // handles destruction of missiles if there are collision(s)... for this iteration, just terminate at the top of the screen
 
 };
