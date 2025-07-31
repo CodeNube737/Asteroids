@@ -6,7 +6,7 @@ class missile
 {
 
 private:
-    int lenth;
+    int length;
     cv::Point postion;
     cv::Point velocity;
     const cv::Scalar color; // cv::Scalar(0, 0, 255)
@@ -20,7 +20,7 @@ public:
 {}
 
     //gets & sets
-    int getLength() const {return lenth;}
+    int getLength() const {return length;}
     cv::Point getPosition() const {return postion;}
     cv::Point getVelocity() const {return velocity;}
     void setPosition(cv::Point newPosition) {postion = newPosition;}
