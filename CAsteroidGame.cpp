@@ -7,8 +7,7 @@ CAsteroidsGame::CAsteroidsGame(cv::Point initial) :
     img = cv::Mat(WINDOW_HEIGHT, WINDOW_WIDTH, CV_8UC3, cv::Scalar(0, 0, 0));
 }
 
-void CAsteroidsGame::run()
-{
+void CAsteroidsGame::run() {
     while (!leave)
     {
         update();
@@ -16,32 +15,39 @@ void CAsteroidsGame::run()
     }
 }
 
-void CAsteroidsGame::update()
-{
+void CAsteroidsGame::update() {
     key = cv::waitKey(DELAY);
     userInput(key);
     moveShip(WINDOW_WIDTH, WINDOW_HEIGHT);
+    detectCollisions(WINDOW_HEIGHT); // should be done before moveLasers, so there's less lasers to move
+    moveLasers();
 }
 
-void CAsteroidsGame::draw(cv::Mat& img)
-{
+void CAsteroidsGame::draw(cv::Mat& img) {
     img = cv::Scalar::all(0);
-
 
     cv::circle(img, spaceship.getPosition(), SHIP_RADIUS, SHIP_COLOR, -1);
     cv::putText(img, "Press 'l' to leave", cv::Point(WINDOW_WIDTH / 2 - 135, WINDOW_HEIGHT / 2 - 25), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 255), 2);
-    cv::imshow(WINDOW_NAME, img);
+    cv::Point laser_position;
+    for (uint16_t i = 0; i < laser.size(); i++) {
+        laser_position = laser[i].getPosition();
+        cv::line(img, laser_position, cv::Point(laser_position.x, laser_position.y - LENGTH_MISSILE), COLOR_LASER, THICK_LASER );
+    }
+    /* the next 2 lines are to troubleshoot: earlier, this showed lasers generated, but not drawn, or moved. They can be reused to troubleshoot missing graphics.
+    std::string lasers = std::to_string(laser.size());
+    cv::putText(img, lasers, cv::Point(WINDOW_WIDTH / 2 - 200, WINDOW_HEIGHT / 2 - 50), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 255), 1); */
+    cv::imshow(WINDOW_NAME, img); // after all drawings
 }
 
-void CAsteroidsGame::userInput(char direction)
-{
+void CAsteroidsGame::userInput(char direction) {
     cv::Point velocity = spaceship.getVelocity();
     switch (direction)
     {
-    case 'w': velocity.y -= ACCELERATION; break;
+    case 'w': velocity.y -= ACCELERATION; break; // (0,0) is top, left
     case 's': velocity.y += ACCELERATION; break;
     case 'a': velocity.x -= ACCELERATION; break;
     case 'd': velocity.x += ACCELERATION; break;
+    case ' ': generateLaser(); break;
     case 'l': leave = true; break;
     }
 
@@ -52,8 +58,7 @@ void CAsteroidsGame::userInput(char direction)
     spaceship.setVelocity(velocity);
 }
 
-void CAsteroidsGame::moveShip(int window_width, int window_height)
-{
+void CAsteroidsGame::moveShip(int window_width, int window_height) {
     cv::Point position = spaceship.getPosition();
     position += spaceship.getVelocity();
 
@@ -66,6 +71,26 @@ void CAsteroidsGame::moveShip(int window_width, int window_height)
     spaceship.setPosition(position);
 }
 
+void CAsteroidsGame::generateLaser() {
+    cv::Point shipPosition = spaceship.getPosition();
+    CAsteroidsGame::laser.push_back({LENGTH_MISSILE, shipPosition, cv::Point(0,SPEED_MISSILE)}); // missile(int len, cv::Point pos, cv::Point vel)
+}
 
+void CAsteroidsGame::detectCollisions(int window_height) {
+    cv::Point laser_position;
+    for (uint16_t i = 0; i < laser.size(); i++) {
+        laser_position = laser[i].getPosition();
+        if( laser_position.y <= 0 )
+            laser.erase(laser.begin() + i); // cherno says this is how to erase
+    }
+}
 
+void CAsteroidsGame::moveLasers() {
+    // note: no need to wrap-around, cuz detectColision() will deal with the only possiblr border condition
+    cv::Point laser_position;
+    for (uint16_t i = 0; i < laser.size(); i++) {
+        laser_position = laser[i].getPosition() - laser[i].getVelocity();
+        laser[i].setPosition(laser_position);
+    }
+}
 
