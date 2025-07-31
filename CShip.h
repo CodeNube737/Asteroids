@@ -1,6 +1,7 @@
 // CShip.h
 #pragma once
 #include <opencv2/opencv.hpp>
+
 #define max_velocity 10
 #define ACCELERATION 1
 #define SHIP_RADIUS 10

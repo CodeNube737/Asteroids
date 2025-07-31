@@ -1,0 +1,11 @@
+ - define vector as a member variable in class definition, as much as possible (at least, here)
+
+ - dpn't mix pointers in with vectors (cplx)
+
+ - use .pushback() to add a new component of <type> object to the vector:p
+	CAsteroidsGame::laser.push_back({LENGTH_MISSILE, shipPosition, cv::Point(0,SPEED_MISSILE), COLOR_LASER}) // missile(int len, cv::Point pos, cv::Point vel, cv::Scalar col)
+
+ - .size() is really useful in for()-loops
+	for (uint16_t i = 0; i < laser.size(); i++) { // uint16_t cuz size is an unsigned long int
+
+ - laser.erase(laser.begin() + i); // cherno says this is how to erase, NOT laser.erase(i);
