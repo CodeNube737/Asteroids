@@ -26,17 +26,34 @@ void CAsteroidsGame::update() {
 void CAsteroidsGame::draw(cv::Mat& img) {
     img = cv::Scalar::all(0);
 
-    cv::circle(img, spaceship.getPosition(), SHIP_RADIUS, SHIP_COLOR, -1);
+    drawText();
+    drawShip();
+    drawMissiles();
+//    drawDebug();
+
+    cv::imshow(WINDOW_NAME, img); // after all drawings
+}
+
+void CAsteroidsGame::drawText() {
     cv::putText(img, "Press 'l' to leave", cv::Point(WINDOW_WIDTH / 2 - 135, WINDOW_HEIGHT / 2 - 25), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 255), 2);
+}
+
+void CAsteroidsGame::drawShip() {
+    cv::circle(img, spaceship.getPosition(), SHIP_RADIUS, SHIP_COLOR, -1);
+}
+
+void CAsteroidsGame::drawMissiles() {
     cv::Point laser_position;
     for (uint16_t i = 0; i < laser.size(); i++) {
         laser_position = laser[i].getPosition();
         cv::line(img, laser_position, cv::Point(laser_position.x, laser_position.y - LENGTH_MISSILE), COLOR_LASER, THICK_LASER );
     }
-    /* the next 2 lines are to troubleshoot: earlier, this showed lasers generated, but not drawn, or moved. They can be reused to troubleshoot missing graphics.
+}
+
+void CAsteroidsGame::drawDebug() {
+    // the next 2 lines are to troubleshoot: earlier, this showed lasers generated, but not drawn, or moved. They can be reused to troubleshoot missing graphics.
     std::string lasers = std::to_string(laser.size());
-    cv::putText(img, lasers, cv::Point(WINDOW_WIDTH / 2 - 200, WINDOW_HEIGHT / 2 - 50), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 255), 1); */
-    cv::imshow(WINDOW_NAME, img); // after all drawings
+    cv::putText(img, lasers, cv::Point(WINDOW_WIDTH / 2 - 200, WINDOW_HEIGHT / 2 - 50), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 255), 1);
 }
 
 void CAsteroidsGame::userInput(char direction) {
