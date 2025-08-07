@@ -37,6 +37,7 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="CAsteroid.h" />
 		<Unit filename="CAsteroidGame.cpp" />
 		<Unit filename="CAsteroidGame.h" />
 		<Unit filename="CMissile.h" />

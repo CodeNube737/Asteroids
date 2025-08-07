@@ -652,12 +652,17 @@
 1724133287 /home/pi/Documents/2024/Asteroids/06_Ship n Missiles/CMissile.h
 	<opencv2/opencv.hpp>
 
-1753933460 source:/home/pi/Documents/2025/Asteroids/Asteroids/main.cpp
+1754549983 source:/home/pi/Documents/2025/Asteroids/Asteroids/main.cpp
 	"CAsteroidGame.h"
 
-1754548215 /home/pi/Documents/2025/Asteroids/Asteroids/CAsteroidGame.h
+1754550752 /home/pi/Documents/2025/Asteroids/Asteroids/CAsteroidGame.h
 	"CShip.h"
 	"CMissile.h"
+	<vector>
+	<opencv2/opencv.hpp>
+	"CShip.h"
+	"CMissile.h"
+	"CAsteroid.h"
 	<vector>
 
 1753934881 /home/pi/Documents/2025/Asteroids/Asteroids/CShip.h
@@ -666,6 +671,10 @@
 1753948222 /home/pi/Documents/2025/Asteroids/Asteroids/CMissile.h
 	<opencv2/opencv.hpp>
 
-1753946563 source:/home/pi/Documents/2025/Asteroids/Asteroids/CAsteroidGame.cpp
+1754551202 source:/home/pi/Documents/2025/Asteroids/Asteroids/CAsteroidGame.cpp
 	"CAsteroidGame.h"
+	"CAsteroidGame.h"
+
+1754549857 /home/pi/Documents/2025/Asteroids/Asteroids/CAsteroid.h
+	<opencv2/opencv.hpp>
 
