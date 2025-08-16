@@ -28,16 +28,17 @@ void CAsteroidsGame::update() {
     key = cv::waitKey(DELAY);
     userInput(key);
     moveShip(WINDOW_WIDTH, WINDOW_HEIGHT);
-    detectCollisions(WINDOW_HEIGHT); // should be done before moveLasers, so there's less lasers to move
+    detectCollisions(); // should be done before moveLasers&asteroids, so there's less lasers to move
     moveLasers();
+    moveAsteroids();
 }
 
 void CAsteroidsGame::draw(cv::Mat& img) {
     img = BKGRD_COLOR;
     drawText();
-    drawAsteroids();
     drawShip();
-    drawMissiles();
+    drawMissiles(); 
+    drawAsteroids();
 //    drawDebug();
     cv::imshow(WINDOW_NAME, img); // after all drawings
 }
