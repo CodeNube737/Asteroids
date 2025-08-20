@@ -148,13 +148,20 @@ void CAsteroidsGame::detectCollisions() {
         if( laser_position.y <= 0 )
             laser.erase(laser.begin() + i); // cherno says this is how to erase
     }
-    // collisions between Asteroids and themselves INCOMPLETE
-    /// please fix the if conditions below so that they don't depend on boundaries, but on actual collisions
-    for (size_t i = 0; i < asteroids.size(); i++) {
-        cv::Point pos = asteroids[i].getPosition();
-        ///if ( pos.x < 0 || pos.x > WINDOW_WIDTH || pos.y < 0 || pos.y > WINDOW_HEIGHT ) {
-            asteroids.erase(asteroids.begin() + i);
-        ///} else if ( (pos.x < 0 || pos.x > WINDOW_WIDTH || pos.y < 0 || pos.y > WINDOW_HEIGHT) ) { 
+    // collisions between Asteroids and themselves 
+    for (size_t i = 0; i < asteroids.size(); i++) { // look at one asteroid
+         cv::Point posI = asteroids[i].getPosition(); 
+         cv::Point radI = asteroids[i].getRadius();
+         for (size_t j = i+1; i < asteroids.size(); j++) { // compare it to each other asteroid
+              cv::Point posJ = asteroids[j].getPosition(); 
+              cv::Point radJ = asteroids[j].getRadius();
+              if (abs(posI - posJ) <= (radI + radJ)) {
+                   asteroids.erase(asteroids.begin() + i);
+                   asteroids.erase(asteroids.begin() + j);
+                   j = asteroids.size(); // exit for-loop
+              }
+         }
+        } ///else if ...copied incorrect...( (pos.x < 0 || pos.x > WINDOW_WIDTH || pos.y < 0 || pos.y > WINDOW_HEIGHT) ) { 
     // collisions between ship and the asteroids
              asteroids
              loseGame(); // not made yet, but forshadowed in header-file
