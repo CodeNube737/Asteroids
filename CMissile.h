@@ -17,16 +17,11 @@ private:
 
 public:
     missile(int len, cv::Point pos, cv::Point vel) :
-    length(len),
-    postion(pos),
-    velocity(vel)
-{}
+        length(len), postion(pos), velocity(vel) {}
 
     //gets & sets
     int getLength() const {return length;}
     cv::Point getPosition() const {return postion;}
     cv::Point getVelocity() const {return velocity;}
     void setPosition(cv::Point newPosition) {postion = newPosition;}
-
-    //methods... all other methods will be handled within the CAsteroidGame
 };
