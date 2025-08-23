@@ -2,8 +2,8 @@
 #pragma once
 #include <opencv2/opencv.hpp>
 
-#define LENGTH_MISSILE 6
-#define SPEED_MISSILE 20
+#define LENGTH_MISSILE 6 // not too long!
+#define SPEED_MISSILE 20 // 20 is good
 #define COLOR_LASER cv::Scalar(0, 0, 255)
 #define THICK_LASER 2
 

@@ -2,32 +2,54 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="main.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+	<File name="CAsteroidGame.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="141" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="CAsteroidGame.cpp" open="1" top="1" tabpos="3" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3454" topLine="40" />
+			<Cursor1 position="177" topLine="0" />
 		</Cursor>
 		<Folding>
-			<Collapse line="9" />
+			<Collapse line="5" />
+			<Collapse line="55" />
+			<Collapse line="62" />
+			<Collapse line="68" />
+			<Collapse line="73" />
+			<Collapse line="83" />
+			<Collapse line="90" />
+			<Collapse line="122" />
+			<Collapse line="136" />
+			<Collapse line="142" />
+			<Collapse line="153" />
+			<Collapse line="165" />
+			<Collapse line="181" />
+			<Collapse line="204" />
+			<Collapse line="215" />
+			<Collapse line="235" />
+			<Collapse line="251" />
+			<Collapse line="263" />
 		</Folding>
-	</File>
-	<File name="CAsteroidGame.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="334" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="CMissile.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="170" topLine="0" />
-		</Cursor>
 	</File>
 	<File name="CShip.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="100" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="main.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="133" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="CAsteroid.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="87" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="CMissile.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="98" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="CAsteroidGame.h" open="1" top="1" tabpos="2" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="378" topLine="1" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

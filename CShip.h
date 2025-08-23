@@ -2,7 +2,7 @@
 #pragma once
 #include <opencv2/opencv.hpp>
 
-#define max_velocity 10
+#define max_velocity 10 // 10 is good
 #define ACCELERATION 1
 #define SHIP_RADIUS 10
 #define ORANGE_METR cv::Scalar(0, 165, 255)
