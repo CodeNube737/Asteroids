@@ -10,8 +10,6 @@
 #define WINDOW_HEIGHT 600
 #define DELAY 30
 #define BKGRD_COLOR cv::Scalar(0,0,0)
-#define MAX_ASTEROIDS 10
-#define ASTEROID_SPEED 100 // percentage
 
 class CAsteroidsGame
 {
@@ -22,6 +20,7 @@ private:
     cv::Mat img;
     bool leave;
     char key;
+    int collisionCount;
 
 public:
     CAsteroidsGame(cv::Point start_position, int numAsteroids);
@@ -42,6 +41,9 @@ public:
     void generateAsteroid(); // used everytime 1 or more asteroids are destroyed
     void moveAsteroids(); // updates the position of the asteroids based on velocity and ASTEROID_SPEED
     void detectCollisions(); // most complex, but is ultimately just a tree of what-if's (possible collisions)
+    void missileBoundary(); // collisions between lasers and top of screen
+    void asteroidAsteroid(size_t asteroidNo, cv::Point asteroidsPos, int asteroidRad, int& collisionCount); // collisions between Asteroids and themselves
+    void asteroidMissile(size_t asteroidNo, cv::Point asteroidsPos, int asteroidRad, int& collisionCount); // collisions between Asteroids and missiles (lasers)
     //void loseGame(); // should pasue the screen, erase the "press l to leave", and rewrite in below "You lose"... may also display your score
 
 };
