@@ -3,7 +3,7 @@
 
 int main()
 {
-    CAsteroidsGame Asteroids(cv::Point(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), 7);
+    CAsteroidsGame Asteroids(5); // type-in the number of asteroids to start with
 
     Asteroids.run();
 

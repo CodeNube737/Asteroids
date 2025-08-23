@@ -14,19 +14,18 @@
 class CAsteroidsGame
 {
 private:
+    enum state_t { PLAYING, PAUSED, GAME_OVER, MENU }; // future work
+    state_t State;
+
     Spaceship spaceship; // initialized in constructor
     std::vector<missile> laser; // non-initial, after constructor
     std::vector<asteroid> asteroids; // post-initial, (in constructor, and after)
     cv::Mat img;
     bool leave;
     char key;
-    bool lose;
-    int collisionCount;
-    /*For more advanced games, you might separate menus into their own "state machine" (Game State: Playing, Paused, GameOver, MainMenu, etc.).
-    */
 
 public:
-    CAsteroidsGame(cv::Point start_position, int numAsteroids);
+    CAsteroidsGame(int numAsteroids);
 
     // Methods
     void run(); // loops update and draw
@@ -45,9 +44,9 @@ public:
     void moveAsteroids(); // updates the position of the asteroids based on velocity and ASTEROID_SPEED
     void detectCollisions(); // most complex, but is ultimately just a tree of what-if's (possible collisions)
     void missileBoundary(); // collisions between lasers and top of screen
-    void asteroidAsteroid(size_t asteroidNo, cv::Point asteroidsPos, int asteroidRad, int& collisionCount); // collisions between Asteroids and themselves
-    void asteroidMissile(size_t asteroidNo, cv::Point asteroidsPos, int asteroidRad, int& collisionCount); // collisions between Asteroids and missiles (lasers)
-    void asteroidShip(size_t asteroidNo, cv::Point asteroidsPos, int asteroidRad, int& collisionCount); 
+    void asteroidAsteroid(size_t asteroidNo, cv::Point asteroidPos, int asteroidRad, int& collisionCount); // collisions between Asteroids and themselves
+    void asteroidMissile(size_t asteroidNo, cv::Point asteroidPos, int asteroidRad, int& collisionCount); // collisions between Asteroids and missiles (lasers)
+    void asteroidShip(cv::Point asteroidPos, int asteroidRad); // collisions between ship and the asteroids
     void loseGame(); // should pause the screen, erase all but the "press l to leave", and rewrite in below, "You lose"... may also display your score
 
 };
