@@ -20,7 +20,10 @@ private:
     cv::Mat img;
     bool leave;
     char key;
+    bool lose;
     int collisionCount;
+    /*For more advanced games, you might separate menus into their own "state machine" (Game State: Playing, Paused, GameOver, MainMenu, etc.).
+    */
 
 public:
     CAsteroidsGame(cv::Point start_position, int numAsteroids);
@@ -44,6 +47,7 @@ public:
     void missileBoundary(); // collisions between lasers and top of screen
     void asteroidAsteroid(size_t asteroidNo, cv::Point asteroidsPos, int asteroidRad, int& collisionCount); // collisions between Asteroids and themselves
     void asteroidMissile(size_t asteroidNo, cv::Point asteroidsPos, int asteroidRad, int& collisionCount); // collisions between Asteroids and missiles (lasers)
-    //void loseGame(); // should pasue the screen, erase the "press l to leave", and rewrite in below "You lose"... may also display your score
+    void asteroidShip(size_t asteroidNo, cv::Point asteroidsPos, int asteroidRad, int& collisionCount); 
+    void loseGame(); // should pause the screen, erase all but the "press l to leave", and rewrite in below, "You lose"... may also display your score
 
 };
