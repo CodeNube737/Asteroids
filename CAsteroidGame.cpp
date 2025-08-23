@@ -2,7 +2,7 @@
 #include "CAsteroidGame.h"
 
 CAsteroidsGame::CAsteroidsGame(cv::Point start_position, int numAsteroids) :
-    spaceship(start_position), leave(false), key('0'), collisionCount(0)
+    spaceship(start_position), leave(false), key('0'), collisionCount(0), lose(false)
 {
     img = cv::Mat(WINDOW_HEIGHT, WINDOW_WIDTH, CV_8UC3, BKGRD_COLOR);
 
@@ -12,7 +12,7 @@ CAsteroidsGame::CAsteroidsGame(cv::Point start_position, int numAsteroids) :
     for (int i = 0; i < numAsteroids; ++i)
     {
         int rad = rand() % 30 + 10;
-        cv::Point pos(rand() % WINDOW_WIDTH, rand() % WINDOW_HEIGHT);
+        cv::Point pos(rand() % WINDOW_WIDTH, rand() % WINDOW_HEIGHT/4);
         cv::Point vel(rand() % 7 - 3, rand() % 7 - 3);
         cv::Scalar col(rand() % 255, rand() % 255, rand() % 255);
         asteroids.emplace_back(rad, pos, vel, col);
@@ -188,9 +188,9 @@ void CAsteroidsGame::detectCollisions() // future work: add flags so that u don'
 
         asteroidMissile(i, posI, radI, collisionCount); // collision
 
-        ///else if ...copied incorrect...( (pos.x < 0 || pos.x > WINDOW_WIDTH || pos.y < 0 || pos.y > WINDOW_HEIGHT) ) {
+        asteroidShip(i, posI, radI, collisionCount); // collision
         // collisions between ship and the asteroids INCOMPLETE
-        //asteroids
+       
         //loseGame(); // not made yet, but forshadowed in header-file
 
     }
@@ -247,41 +247,19 @@ void CAsteroidsGame::asteroidMissile(size_t asteroidNo, cv::Point asteroidPos, i
     }
 }
 
-// below is a copy of the original detect collisions for Asteroids:
-/*
-
-void AsteroidBelt::detectCollisions() // thanks again gpt!
+void CAsteroidsGame::asteroidShip(size_t asteroidNo, cv::Point asteroidsPos, int asteroidRad, int& collisionCount)
 {
-    int collisionCount = 0;
-
-    // Check for collisions between asteroids
-    for (size_t i = 0; i < _Asteroids.size(); ++i)
-    {
-        for (size_t j = i + 1; j < _Asteroids.size(); ++j)
-        {
-            cv::Point pos1 = _Asteroids[i].getPosition();
-            cv::Point pos2 = _Asteroids[j].getPosition();
-            int rad1 = _Asteroids[i].getRadius();
-            int rad2 = _Asteroids[j].getRadius();
-
-            // Calculate the distance between the two asteroids
-            double distance = cv::norm(pos1 - pos2);
-
-            // Check if the distance is less than the sum of their radii (collision detected)
-            if (distance < rad1 + rad2)
-            {
-                collisionCount++;
-                _Asteroids.erase(_Asteroids.begin() + j);
-                _Asteroids.erase(_Asteroids.begin() + i);
-            }
-        }
-    }
-
-    // Generate new asteroids (you can adjust the number of new asteroids as needed)
-    for (int i = 0; i < (collisionCount * 2); ++i) // "* 2", assuming 2 asteroids collided with eachother
-        generateAsteroid();
-
-    // Optionally, you can add a delay for a few cycles if needed
-    if(collisionCount) {cv::waitKey(DELAY_TIME);}
+    int i = asteroidNo;
+    cv::Point posI = asteroidPos;
+    int radI = asteroidRad;
+    cv::Point posJ = ship.getPosition();
+    int radJ = ship.getRadius();
+    double distance = cv::norm(posI-posJ); // compare asteroid "I" to each other asteroid
+    if (distance <= (radI + radJ))
+      lose = true;
 }
-*/
+
+void CAsteroidsGame::loseGame()
+{
+asteroids.clear();
+}
