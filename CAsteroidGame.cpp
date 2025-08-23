@@ -2,10 +2,12 @@
 #include "CAsteroidGame.h"
 
 CAsteroidsGame::CAsteroidsGame(cv::Point start_position, int numAsteroids) :
-    spaceship(start_position), leave(false), key('0')
+    spaceship(start_position), leave(false), key('0'), collisionCount(0)
 {
     img = cv::Mat(WINDOW_HEIGHT, WINDOW_WIDTH, CV_8UC3, BKGRD_COLOR);
 
+    if (asteroids.size() < MAX_ASTEROIDS)
+        numAsteroids = MAX_ASTEROIDS;
     asteroids.reserve(numAsteroids);
     for (int i = 0; i < numAsteroids; ++i)
     {
@@ -148,7 +150,7 @@ void CAsteroidsGame::generateAsteroid()
     if (asteroids.size() < MAX_ASTEROIDS)
     {
         int rad = rand() % 30 + 10;
-        cv::Point pos(rand() % WINDOW_WIDTH, rand() % WINDOW_HEIGHT);
+        cv::Point pos(rand() % WINDOW_WIDTH, rand() % (WINDOW_HEIGHT/2));
         cv::Point vel( (rand() % 7 - 3)*ASTEROID_SPEED/100, (rand() % 7 - 3)*ASTEROID_SPEED/100 );
         cv::Scalar col(rand() % 255, rand() % 255, rand() % 255);
         asteroids.push_back(asteroid(rad, pos, vel, col));
@@ -159,7 +161,7 @@ void CAsteroidsGame::moveAsteroids()
 {
     for (asteroid& ast : asteroids)
     {
-        cv::Point pos = ast.getPosition() + ast.getVelocity();
+        cv::Point pos = ast.getPosition() + (ast.getVelocity()*ASTEROID_SPEED/100);
 
         // Wrap around edges (optional, you can remove this if you want out-of-bounds removal only)
         if (pos.x < 0) pos.x = WINDOW_WIDTH;
@@ -173,7 +175,33 @@ void CAsteroidsGame::moveAsteroids()
 
 void CAsteroidsGame::detectCollisions() // future work: add flags so that u don't check this every cycle
 {
-    // collisions between lasers and top of screen
+    int collisionCount = 0;
+
+    missileBoundary(); // collision
+
+    for (size_t i = 0; i < asteroids.size(); i++)   // look at one asteroid collide w/ any object
+    {
+        cv::Point posI = asteroids[i].getPosition();
+        int radI = asteroids[i].getRadius();
+
+        asteroidAsteroid(i, posI, radI, collisionCount); // collision
+
+        asteroidMissile(i, posI, radI, collisionCount); // collision
+
+        ///else if ...copied incorrect...( (pos.x < 0 || pos.x > WINDOW_WIDTH || pos.y < 0 || pos.y > WINDOW_HEIGHT) ) {
+        // collisions between ship and the asteroids INCOMPLETE
+        //asteroids
+        //loseGame(); // not made yet, but forshadowed in header-file
+
+    }
+    for (int i = 0; i < (collisionCount); ++i) // generate new asteroids
+        generateAsteroid();
+    //if(collisionCount) {cv::waitKey(DELAY);} // optional delay if CPU resources get clogged
+
+}
+
+void CAsteroidsGame::missileBoundary()
+{
     cv::Point laser_position;
     for (uint16_t i = 0; i < laser.size(); i++)
     {
@@ -181,44 +209,43 @@ void CAsteroidsGame::detectCollisions() // future work: add flags so that u don'
         if( laser_position.y <= 0 )
             laser.erase(laser.begin() + i); // cherno says this is how to erase
     }
-    // collisions between Asteroids and themselves
-    int collisionCount = 0; // with dynamic memory, you need to use delete with new...?
-    for (size_t i = 0; i < asteroids.size(); i++)   // look at one asteroid
-    {
-        cv::Point posI = asteroids[i].getPosition();
-        int radI = asteroids[i].getRadius();
-        for (size_t j = i+1; i < asteroids.size(); j++)   // compare it to each other asteroid
+}
+
+void CAsteroidsGame::asteroidAsteroid(size_t asteroidNo, cv::Point asteroidPos, int asteroidRad, int& collisionCount)
+{
+    int i = asteroidNo;
+    cv::Point posI = asteroidPos;
+    int radI = asteroidRad;
+            for (size_t j = i+1; j < asteroids.size(); j++)
         {
             cv::Point posJ = asteroids[j].getPosition();
             int radJ = asteroids[j].getRadius();
-            int distance = int(cv::norm(posI-posJ));
-            if (abs(distance) <= (radI + radJ))
+            double distance = cv::norm(posI-posJ); // compare asteroid "I" to each other asteroid
+            if (distance <= (radI + radJ))
             {
-                j = asteroids.size(); // exit for-loop
                 asteroids.erase(asteroids.begin() + i);
-                asteroids.erase(asteroids.begin() + j);
-                collisionCount++;
+                asteroids.erase(asteroids.begin() + j - 1);
+                j = asteroids.size(); // exit for-loop
+                collisionCount += 2;
             }
         }
-    }
-        // Generate new asteroids (you can adjust the number of new asteroids as needed)
-    for (int i = 0; i < (collisionCount * 2); ++i) // "* 2", assuming 2 asteroids collided with eachother
-        generateAsteroid();
-
-    // Optionally, you can add a delay for a few cycles if needed
-    if(collisionCount) {cv::waitKey(DELAY);}
-
-     ///else if ...copied incorrect...( (pos.x < 0 || pos.x > WINDOW_WIDTH || pos.y < 0 || pos.y > WINDOW_HEIGHT) ) {
-    // collisions between ship and the asteroids INCOMPLETE
-    //asteroids
-    //loseGame(); // not made yet, but forshadowed in header-file
-
-
-    // collisions between lasers and the asteroids INCOMPLETE
-
-
 }
 
+void CAsteroidsGame::asteroidMissile(size_t asteroidNo, cv::Point asteroidPos, int asteroidRad, int& collisionCount)
+{
+    cv::Point laser_position;
+    for (uint16_t i = 0; i < laser.size(); i++)
+    {
+        laser_position = laser[i].getPosition() + cv::Point(0,LENGTH_MISSILE);
+        double distance = cv::norm(asteroidPos-laser_position);
+        if( distance <= asteroidRad )
+        {
+            laser.erase(laser.begin() + i);
+            asteroids.erase(asteroids.begin() + asteroidNo);
+            collisionCount++;
+        }
+    }
+}
 
 // below is a copy of the original detect collisions for Asteroids:
 /*
