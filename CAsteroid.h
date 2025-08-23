@@ -2,6 +2,7 @@
 #pragma once
 #include <opencv2/opencv.hpp>
 
+#define AVG_RADIUS 30 // +/- 10%
 #define MAX_ASTEROIDS 10 // to prevent a fringe case over-generation
 #define ASTEROID_SPEED 100 // percentage
 

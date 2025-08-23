@@ -1,17 +1,17 @@
 // CAsteroidsGame.cpp
 #include "CAsteroidGame.h"
 
-CAsteroidsGame::CAsteroidsGame(cv::Point start_position, int numAsteroids) :
-    spaceship(start_position), leave(false), key('0'), collisionCount(0), lose(false)
+CAsteroidsGame::CAsteroidsGame(int numAsteroids) :
+    State(PLAYING), spaceship(cv::Point(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)), leave(false), key('0')
 {
     img = cv::Mat(WINDOW_HEIGHT, WINDOW_WIDTH, CV_8UC3, BKGRD_COLOR);
 
-    if (asteroids.size() < MAX_ASTEROIDS)
+    if (asteroids.size() > MAX_ASTEROIDS)
         numAsteroids = MAX_ASTEROIDS;
     asteroids.reserve(numAsteroids);
     for (int i = 0; i < numAsteroids; ++i)
     {
-        int rad = rand() % 30 + 10;
+        int rad = rand() % AVG_RADIUS + 10;
         cv::Point pos(rand() % WINDOW_WIDTH, rand() % WINDOW_HEIGHT/4);
         cv::Point vel(rand() % 7 - 3, rand() % 7 - 3);
         cv::Scalar col(rand() % 255, rand() % 255, rand() % 255);
@@ -42,16 +42,21 @@ void CAsteroidsGame::draw(cv::Mat& img)
 {
     img = BKGRD_COLOR;
     drawText();
-    drawShip();
-    drawMissiles();
-    drawAsteroids();
-//    drawDebug();
+    if (State == PLAYING)
+    {
+        drawShip();
+        drawMissiles();
+        drawAsteroids();
+    }
+    //drawDebug();
     cv::imshow(WINDOW_NAME, img); // after all drawings
 }
 
 void CAsteroidsGame::drawText()
 {
     cv::putText(img, "Press 'l' to leave", cv::Point(WINDOW_WIDTH / 2 - 135, WINDOW_HEIGHT / 2 - 25), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 255), 2);
+    if (State == GAME_OVER)
+        cv::putText(img, "Game Over", cv::Point(WINDOW_WIDTH / 2 - 180, WINDOW_HEIGHT / 2 - 100), cv::FONT_HERSHEY_SIMPLEX, 2, cv::Scalar(255, 255, 255), 2);
 }
 
 void CAsteroidsGame::drawAsteroids()
@@ -188,11 +193,7 @@ void CAsteroidsGame::detectCollisions() // future work: add flags so that u don'
 
         asteroidMissile(i, posI, radI, collisionCount); // collision
 
-        asteroidShip(i, posI, radI, collisionCount); // collision
-        // collisions between ship and the asteroids INCOMPLETE
-       
-        //loseGame(); // not made yet, but forshadowed in header-file
-
+        asteroidShip(posI, radI); // collision
     }
     for (int i = 0; i < (collisionCount); ++i) // generate new asteroids
         generateAsteroid();
@@ -216,19 +217,19 @@ void CAsteroidsGame::asteroidAsteroid(size_t asteroidNo, cv::Point asteroidPos, 
     int i = asteroidNo;
     cv::Point posI = asteroidPos;
     int radI = asteroidRad;
-            for (size_t j = i+1; j < asteroids.size(); j++)
+    for (size_t j = i+1; j < asteroids.size(); j++)
+    {
+        cv::Point posJ = asteroids[j].getPosition();
+        int radJ = asteroids[j].getRadius();
+        double distance = cv::norm(posI-posJ); // compare asteroid "I" to each other asteroid
+        if (distance <= (radI + radJ))
         {
-            cv::Point posJ = asteroids[j].getPosition();
-            int radJ = asteroids[j].getRadius();
-            double distance = cv::norm(posI-posJ); // compare asteroid "I" to each other asteroid
-            if (distance <= (radI + radJ))
-            {
-                asteroids.erase(asteroids.begin() + i);
-                asteroids.erase(asteroids.begin() + j - 1);
-                j = asteroids.size(); // exit for-loop
-                collisionCount += 2;
-            }
+            asteroids.erase(asteroids.begin() + i);
+            asteroids.erase(asteroids.begin() + j - 1);
+            j = asteroids.size(); // exit for-loop
+            collisionCount += 2;
         }
+    }
 }
 
 void CAsteroidsGame::asteroidMissile(size_t asteroidNo, cv::Point asteroidPos, int asteroidRad, int& collisionCount)
@@ -247,19 +248,24 @@ void CAsteroidsGame::asteroidMissile(size_t asteroidNo, cv::Point asteroidPos, i
     }
 }
 
-void CAsteroidsGame::asteroidShip(size_t asteroidNo, cv::Point asteroidsPos, int asteroidRad, int& collisionCount)
+void CAsteroidsGame::asteroidShip(cv::Point asteroidPos, int asteroidRad)
 {
-    int i = asteroidNo;
     cv::Point posI = asteroidPos;
     int radI = asteroidRad;
-    cv::Point posJ = ship.getPosition();
-    int radJ = ship.getRadius();
+    cv::Point posJ = spaceship.getPosition();
+    int radJ = SHIP_RADIUS;
+
     double distance = cv::norm(posI-posJ); // compare asteroid "I" to each other asteroid
     if (distance <= (radI + radJ))
-      lose = true;
+        loseGame();
 }
 
 void CAsteroidsGame::loseGame()
 {
-asteroids.clear();
+    asteroids.clear();
+    laser.clear();
+    State = GAME_OVER;
 }
+
+
+
