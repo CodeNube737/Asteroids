@@ -26,3 +26,7 @@ public:
     cv::Scalar getColor() const {return color;}
     void setPosition(cv::Point newPosition) {postion = newPosition;}
 };
+
+
+// the moveAsteroid could be in this file, so the CGame doesn't need to think the best
+// inheritance saves lines
