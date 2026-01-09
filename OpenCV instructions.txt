@@ -1,0 +1,135 @@
+//OpenCV instructions
+
+/*
+ * this will be run in code::blocks
+ *
+ ********************************************************************************************************************************
+ * RELEASE INSTRUCTIONS *
+ * 
+ * Code::Blocks build options:
+ *
+	Search directories -> Compiler:
+		C:\opencv\build\mingw\install\include
+		C:\opencv\build\mingw\install\include\opencv4
+	Search directories -> Linker:
+		C:\opencv\build\mingw\install\x64\mingw\lib
+	Linker settings -> Link libraries:
+		libopencv_core4100.dll
+		libopencv_imgproc4100.dll
+		libopencv_highgui4100.dll
+		libopencv_imgcodecs4100.dll
+		libopencv_videoio4100.dll
+ * Settings -> compiler -> Global compiler settings -> Toolchain executables:
+	• Compiler's Installation Directory:	C:\ProgramData\mingw64\mingw64\bin
+		o OR... just click auto-detect (i find the above directory dodn't work the 2nd time around)
+
+	• C compiler:				x86_64-w64-mingw32-gcc.exe
+	• C++ compiler:				x86_64-w64-mingw32-g++.exe
+	• Linker for dynamic libs:		x86_64-w64-mingw32-g++.exe
+	• Linker for static libs:		x86_64-w64-mingw32-ar.exe
+	• Debugger:				GDB/CDB debugger: Default
+	• Resource compiler:			windres.exe
+	• Make program:				mingw32-make.exe
+ *
+ *
+ ********************************************************************************************************************************
+ * INSTALL INSTRUCTIONS *
+ * there are 9 steps
+ *
+1)	Download OpenCV: https://opencv.org/releases/
+	 - always check, and keep open for reference, in which directory/path things have been installed
+2)	Install CMake using Chocolatey:
+		choco install cmake -y
+
+			• Add CMake to PATH:
+				Press Win + r, run "sysdm.cpl", Advanced -> Environment Variables
+				Under System Variables, locate the Path variable and click Edit.
+				Under System variables, locate and select the Path variable, then click Edit.
+				Add the following entry:
+					C:\Program Files\CMake\bin
+				you may as well do it for User variables as well...
+				click 'Okay' every time to save and exit
+				In cmd:
+					refreshenv
+
+		cmake --version
+		choco upgrade mingw -y
+		gcc --version
+3)	Configure OpenCV with CMake
+		Now we’ll configure OpenCV to build with MinGW.
+
+		• Open CMake GUI (installed by Chocolatey).
+
+		• Set the Paths:
+			Source code: C:/opencv/sources
+			Build folder: C:/opencv/build/mingw
+		• Choose the Generator:
+			Click Configure.
+			Select MinGW Makefiles as the generator.
+			Check Specify native compilers and ensure the following paths match your MinGW installation:
+			• C Compiler: C:/ProgramData/mingw64/mingw64/bin/gcc.exe
+			• C++ Compiler: C:/ProgramData/mingw64/mingw64/bin/g++.exe
+		• Enable the following build options by checking their boxes:
+			BUILD_SHARED_LIBS (check)
+			WITH_MINGW (check, if there)
+			BUILD_opencv_world (check)
+		• Leave any unrelated settings like WITH_VTK, WITH_CUDA, or WITH_OPENCL unchecked unless you need those features.
+		• Click Configure and then Generate.
+4)	Open Git Bash and navigate to the build folder:
+		bash
+		Copy code
+		cd /c/opencv/build/mingw
+		mingw32-make
+		mingw32-make install
+5)	Verify the compiled binaries in:
+	• Libraries:	C:/opencv/build/mingw/lib
+	• Binaries:	C:/opencv/build/mingw/bin
+	• Add C:/opencv/build/mingw/bin to your PATH if not already done.
+6)	Final Verification of Build Options in Code::Blocks:
+	• Here’s a checklist to verify your Code::Blocks setup in Project → Build Options → Search directories:
+	• Compiler:
+		C:/opencv/build/mingw/install/include
+		C:/opencv/build/mingw/install/include/opencv4
+	• linker:
+		C:/opencv/build/mingw/install/x64/mingw/lib
+	• Linker Libraries: Add the following in Project → Build Options → Linker Settings:
+		libopencv_core4100.dll.a
+		libopencv_imgproc4100.dll.a
+		libopencv_highgui4100.dll.a
+		libopencv_imgcodecs4100.dll.a
+		libopencv_videoio4100.dll.a
+7)	Testing - After updating the paths, test with this simple program:
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#include <opencv2/opencv.hpp>
+#include <iostream>
+
+int main() {
+    cv::Mat image = cv::Mat::zeros(300, 600, CV_8UC3);
+    cv::putText(image, "Hello, OpenCV!", cv::Point(50, 150), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2);
+    cv::imshow("Test", image);
+    cv::waitKey(0);
+    return 0;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		• Compile and run it in Code::Blocks. It should compile, but may not run. do steps 8 & 9 to make it run.
+8)	Update the PATH Variable:
+		• Press Win + r, run "sysdm.cpl", Advanced -> Environment Variables
+		• Under System Variables, locate the Path variable and click Edit.
+		• Add the following directory to the list:
+			C:\opencv\build\mingw\install\x64\mingw\bin
+		• you may as well do it for User variables as well...
+		• Click OK to save and close all windows.
+9)	Copy all necessary DLLs from "C:/opencv/build/mingw/install/x64/mingw/bin"
+		libopencv_core4100.dll.a
+		libopencv_imgproc4100.dll.a
+		libopencv_highgui4100.dll.a
+		libopencv_imgcodecs4100.dll.a
+		libopencv_videoio4100.dll.a
+	• Paste these DLLs into the directory containing your executable:
+		• bin/Release/
+	• Re-run your program in CodeBlocks.
+ *
+ *
+ */

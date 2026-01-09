@@ -2,28 +2,14 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="Ship" />
+		<Option title="Asteroids" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
-			<Target title="Debug">
-				<Option output="bin/Debug/Ship" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj/Debug/" />
-				<Option type="1" />
-				<Option compiler="gcc" />
-				<Compiler>
-					<Add option="-g" />
-					<Add option="`pkg-config --cflags opencv4` -std=c++11" />
-				</Compiler>
-				<Linker>
-					<Add option="`pkg-config --libs opencv4` -std=c++11" />
-					<Add option="-lpigpio -lrt -lpthread" />
-				</Linker>
-			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/Ship" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Release/Asteroids" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
-				<Option type="1" />
+				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
@@ -36,13 +22,25 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add directory="C:/opencv/build/mingw/install/include" />
+			<Add directory="C:/opencv/build/mingw/install/include/opencv4" />
 		</Compiler>
+		<Linker>
+			<Add library="opencv_core4110" />
+			<Add library="opencv_imgproc4110" />
+			<Add library="opencv_highgui4110" />
+			<Add library="opencv_imgcodecs4110" />
+			<Add library="opencv_videoio4110" />
+			<Add directory="C:/opencv/build/mingw/install/x64/mingw/lib" />
+		</Linker>
 		<Unit filename="CAsteroid.h" />
 		<Unit filename="CAsteroidGame.cpp" />
 		<Unit filename="CAsteroidGame.h" />
 		<Unit filename="CMissile.h" />
 		<Unit filename="CShip.h" />
 		<Unit filename="main.cpp" />
-		<Extensions />
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
