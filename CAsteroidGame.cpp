@@ -232,12 +232,12 @@ void CAsteroidsGame::asteroidAsteroid(size_t asteroidNo, cv::Point asteroidPos, 
     }
 }
 
-void CAsteroidsGame::asteroidMissile(size_t asteroidNo, cv::Point asteroidPos, int asteroidRad, int& collisionCount)
+void CAsteroidsGame::asteroidMissile(size_t asteroidNo, cv::Point asteroidPos, int asteroidRad, int& collisionCount) // this function is a bit glitchy, and may need to be debugged to improve gameplay
 {
     cv::Point laser_position;
     for (uint16_t i = 0; i < laser.size(); i++)
     {
-        laser_position = laser[i].getPosition() + cv::Point(0,LENGTH_MISSILE);
+        laser_position = laser[i].getPosition() - cv::Point(0,LENGTH_MISSILE); // minus, cuz the origin of the laser-cv::line is at the bottom, i think
         double distance = cv::norm(asteroidPos-laser_position);
         if( distance <= asteroidRad )
         {
