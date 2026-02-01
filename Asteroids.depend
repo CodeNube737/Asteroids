@@ -685,3 +685,21 @@
 1767931037 source:c:\users\dwash\desktop\ides_general\codeblocks\opencv_hw\casteroidgame.cpp
 	"CAsteroidGame.h"
 
+1767931037 source:c:\users\dwash\desktop\ides_general\codeblocks\asteroids\main.cpp
+	"CAsteroidGame.h"
+
+1767931037 c:\users\dwash\desktop\ides_general\codeblocks\asteroids\casteroidgame.h
+	"CShip.h"
+	"CMissile.h"
+	"CAsteroid.h"
+	<vector>
+
+1767931037 c:\users\dwash\desktop\ides_general\codeblocks\asteroids\cship.h
+	<opencv2/opencv.hpp>
+
+1767931037 c:\users\dwash\desktop\ides_general\codeblocks\asteroids\cmissile.h
+	<opencv2/opencv.hpp>
+
+1767931037 c:\users\dwash\desktop\ides_general\codeblocks\asteroids\casteroid.h
+	<opencv2/opencv.hpp>
+
