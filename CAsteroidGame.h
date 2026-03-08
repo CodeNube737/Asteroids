@@ -10,6 +10,7 @@
 #define WINDOW_HEIGHT 600
 #define DELAY 30
 #define BKGRD_COLOR cv::Scalar(0,0,0)
+#define kVelocityScale 0.25f
 
 class CAsteroidsGame
 {
@@ -37,6 +38,8 @@ public:
     void drawAsteroids();
     void drawDebug(); // optional, if you notice an object isn't updating properly, you can show its members
     void userInput(char direction); // gets a single user input every loop
+    cv::Point2f pixel2float(const cv::Point& p) const; // Converts from pixel (integer) to float (with scaling)
+    cv::Point float2pixel(const cv::Point2f& pf) const; // Converts from float (with scaling) back to pixel (integer)
     void moveShip(int window_width, int window_height); // updates the position of the ship based on velocity
     void generateLaser(); // handles construction of new laser beams.
     void moveLasers(); // updates the position of every missile/laser based on velocity

@@ -14,14 +14,17 @@ private:
     int _length;
     cv::Point _postion;
     cv::Point _velocity;
+    cv::Point2f _calculatedPosition;
 
 public:
-    missile(int len, cv::Point pos, cv::Point vel) :
-        _length(len), _postion(pos), _velocity(vel) {}
+    missile(int len, cv::Point pos, cv::Point vel, cv::Point2f cPos) :
+        _length(len), _postion(pos), _velocity(vel), _calculatedPosition(cPos) {}
 
     //gets & sets
     int getLength() const {return _length;}
     cv::Point getPosition() const {return _postion;}
-    cv::Point getVelocity() const {return _velocity;}
     void setPosition(cv::Point newPosition) {_postion = newPosition;}
+    cv::Point getCalcPosition() {return _calculatedPosition;}
+    void setCalcPosition(cv::Point newPosition) {_calculatedPosition = newPosition;}
+    cv::Point getVelocity() const {return _velocity;}
 };

@@ -15,7 +15,7 @@ CAsteroidsGame::CAsteroidsGame(int numAsteroids) :
         cv::Point pos(rand() % WINDOW_WIDTH, rand() % WINDOW_HEIGHT/4);
         cv::Point vel(rand() % 7 - 3, rand() % 7 - 3);
         cv::Scalar col(rand() % 255, rand() % 255, rand() % 255);
-        _asteroids.emplace_back(rad, pos, vel, col);
+        _asteroids.emplace_back(rad, pos, vel, col, pixel2float(pos));
     }
 }
 
@@ -119,6 +119,23 @@ void CAsteroidsGame::userInput(char direction)
     _spaceship.setVelocity(velocity);
 }
 
+cv::Point2f CAsteroidsGame::pixel2float(const cv::Point& p) const
+{
+    return cv::Point2f(
+               static_cast<float>(p.x) * kVelocityScale,
+               static_cast<float>(p.y) * kVelocityScale
+           );
+
+}
+
+cv::Point CAsteroidsGame::float2pixel(const cv::Point2f& pf) const
+{
+    return cv::Point(
+               static_cast<int>(pf.x / kVelocityScale),
+               static_cast<int>(pf.y / kVelocityScale)
+           );
+}
+
 void CAsteroidsGame::moveShip(int window_width, int window_height) // update with frame logic?
 {
     cv::Point position = _spaceship.getPosition();
@@ -136,16 +153,26 @@ void CAsteroidsGame::moveShip(int window_width, int window_height) // update wit
 void CAsteroidsGame::generateLaser()
 {
     cv::Point shipPosition = _spaceship.getPosition();
-    CAsteroidsGame::_laser.push_back({LENGTH_MISSILE, shipPosition, cv::Point(0,SPEED_MISSILE)}); // missile(int len, cv::Point pos, cv::Point vel)
+    CAsteroidsGame::_laser.push_back({LENGTH_MISSILE, shipPosition, cv::Point(0,SPEED_MISSILE), pixel2float(shipPosition)}); // missile(int len, cv::Point pos, cv::Point vel)
 }
 
-void CAsteroidsGame::moveLasers() // update with frame logic?
+void CAsteroidsGame::moveLasers()
 {
-    // note: no need to wrap-around, cuz detectColision() will deal with the only possiblr border condition
-    cv::Point laser_position;
+    // Note: no need to wrap-around; border handled in detectColision()
     for (uint16_t i = 0; i < _laser.size(); i++)
     {
-        laser_position = _laser[i].getPosition() - _laser[i].getVelocity();
+        // Get current float position and integer velocity
+        cv::Point2f calculatedPos = _laser[i].getCalcPosition();
+        cv::Point velocity = _laser[i].getVelocity();
+
+        // Move by scaled velocity
+        calculatedPos -= pixel2float(velocity);
+
+        // Update accumulated float position
+        _laser[i].setCalcPosition(calculatedPos);
+
+        // For rendering/interface, convert back to pixel position
+        cv::Point laser_position = float2pixel(calculatedPos);
         _laser[i].setPosition(laser_position);
     }
 }
@@ -158,22 +185,29 @@ void CAsteroidsGame::generateAsteroid()
         cv::Point pos(rand() % WINDOW_WIDTH, rand() % (WINDOW_HEIGHT/2));
         cv::Point vel( (rand() % 7 - 3)*ASTEROID_SPEED/100, (rand() % 7 - 3)*ASTEROID_SPEED/100 );
         cv::Scalar col(rand() % 255, rand() % 255, rand() % 255);
-        _asteroids.push_back(asteroid(rad, pos, vel, col));
+        _asteroids.push_back(asteroid(rad, pos, vel, col, pixel2float(pos)));
     }
 }
 
-void CAsteroidsGame::moveAsteroids() // update with frame logic?
+void CAsteroidsGame::moveAsteroids()
 {
     for (asteroid& ast : _asteroids)
     {
-        cv::Point pos = ast.getPosition() + (ast.getVelocity()*ASTEROID_SPEED/100);
+        cv::Point2f calculatedPos = ast.getCalcPosition();
+        cv::Point velocity = ast.getVelocity();
 
-        // Wrap around edges (optional, you can remove this if you want out-of-bounds removal only)
+        calculatedPos += pixel2float(velocity); // Move by scaled velocity
+        cv::Point pos = float2pixel(calculatedPos); // Convert to pixel position for rendering/interface
+
+        // Wrap around edges (optional)
         if (pos.x < 0) pos.x = WINDOW_WIDTH;
         if (pos.x > WINDOW_WIDTH) pos.x = 0;
         if (pos.y < 0) pos.y = WINDOW_HEIGHT;
         if (pos.y > WINDOW_HEIGHT) pos.y = 0;
+        calculatedPos = pixel2float(pos);
 
+        // Update accumulated & rendered float position
+        ast.setCalcPosition(calculatedPos);
         ast.setPosition(pos);
     }
 }

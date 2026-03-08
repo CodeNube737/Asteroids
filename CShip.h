@@ -14,14 +14,17 @@ class Spaceship
 private:
     cv::Point _position;
     cv::Point _velocity;
+    cv::Point2f _calculatedPosition;
 
 public:
     Spaceship(cv::Point initial) :
-        _position(initial), _velocity(cv::Point(0, 0)) {}
+        _position(initial), _velocity(cv::Point(0, 0)), _calculatedPosition(cv::Point2f(0.0f, 0.0f)) {}
 
     //gets & sets
     cv::Point getPosition() {return _position;}
     void setPosition(cv::Point newPosition) {_position = newPosition;}
+    cv::Point getCalcPosition() {return _calculatedPosition;}
+    void setCalcPosition(cv::Point newPosition) {_calculatedPosition = newPosition;}
     cv::Point getVelocity() {return _velocity;}
     void setVelocity(cv::Point newVelocity) {_velocity = newVelocity;}
 };
