@@ -12,16 +12,16 @@
 class Spaceship
 {
 private:
-    cv::Point position;
-    cv::Point velocity;
+    cv::Point _position;
+    cv::Point _velocity;
 
 public:
     Spaceship(cv::Point initial) :
-        position(initial), velocity(cv::Point(0, 0)) {}
+        _position(initial), _velocity(cv::Point(0, 0)) {}
 
     //gets & sets
-    cv::Point getPosition() {return position;}
-    void setPosition(cv::Point newPosition) {position = newPosition;}
-    cv::Point getVelocity() {return velocity;}
-    void setVelocity(cv::Point newVelocity) {velocity = newVelocity;}
+    cv::Point getPosition() {return _position;}
+    void setPosition(cv::Point newPosition) {_position = newPosition;}
+    cv::Point getVelocity() {return _velocity;}
+    void setVelocity(cv::Point newVelocity) {_velocity = newVelocity;}
 };

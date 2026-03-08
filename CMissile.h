@@ -11,17 +11,17 @@ class missile
 {
 
 private:
-    int length;
-    cv::Point postion;
-    cv::Point velocity;
+    int _length;
+    cv::Point _postion;
+    cv::Point _velocity;
 
 public:
     missile(int len, cv::Point pos, cv::Point vel) :
-        length(len), postion(pos), velocity(vel) {}
+        _length(len), _postion(pos), _velocity(vel) {}
 
     //gets & sets
-    int getLength() const {return length;}
-    cv::Point getPosition() const {return postion;}
-    cv::Point getVelocity() const {return velocity;}
-    void setPosition(cv::Point newPosition) {postion = newPosition;}
+    int getLength() const {return _length;}
+    cv::Point getPosition() const {return _postion;}
+    cv::Point getVelocity() const {return _velocity;}
+    void setPosition(cv::Point newPosition) {_postion = newPosition;}
 };

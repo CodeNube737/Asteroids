@@ -10,21 +10,21 @@ class asteroid
 {
 
 private:
-    int radius;
-    cv::Point postion;
-    cv::Point velocity;
-    cv::Scalar color;
+    int _radius;
+    cv::Point _postion;
+    cv::Point _velocity;
+    cv::Scalar _color;
 
 public:
     asteroid(int rad, cv::Point pos, cv::Point vel, cv::Scalar col) :
-        radius(rad), postion(pos), velocity(vel), color(col) {}
+        _radius(rad), _postion(pos), _velocity(vel), _color(col) {}
 
     //gets & sets
-    int getRadius() const {return radius;}
-    cv::Point getPosition() const {return postion;}
-    cv::Point getVelocity() const {return velocity;}
-    cv::Scalar getColor() const {return color;}
-    void setPosition(cv::Point newPosition) {postion = newPosition;}
+    int getRadius() const {return _radius;}
+    cv::Point getPosition() const {return _postion;}
+    cv::Point getVelocity() const {return _velocity;}
+    cv::Scalar getColor() const {return _color;}
+    void setPosition(cv::Point newPosition) {_postion = newPosition;}
 };
 
 

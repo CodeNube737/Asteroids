@@ -15,14 +15,14 @@ class CAsteroidsGame
 {
 private:
     enum state_t { PLAYING, PAUSED, GAME_OVER, MENU }; // future work
-    state_t State;
+    state_t _state;
 
-    Spaceship spaceship; // initialized in constructor
-    std::vector<missile> laser; // non-initial, after constructor
-    std::vector<asteroid> asteroids; // post-initial, (in constructor, and after)
-    cv::Mat img;
-    bool leave;
-    char key;
+    Spaceship _spaceship; // initialized in constructor
+    std::vector<missile> _laser; // non-initial, after constructor
+    std::vector<asteroid> _asteroids; // post-initial, (in constructor, and after)
+    cv::Mat _img;
+    bool _leave;
+    char _key;
 
 public:
     CAsteroidsGame(int numAsteroids);
@@ -30,7 +30,7 @@ public:
     // Methods
     void run(); // loops update and draw
     void update(); // gets user input & updates all positions & detects colission
-    void draw(cv::Mat& img); // draws everything that was updated
+    void draw(cv::Mat& _img); // draws everything that was updated
     void drawText();
     void drawShip();
     void drawMissiles();

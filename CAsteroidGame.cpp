@@ -2,94 +2,94 @@
 #include "CAsteroidGame.h"
 
 CAsteroidsGame::CAsteroidsGame(int numAsteroids) :
-    State(PLAYING), spaceship(cv::Point(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)), leave(false), key('0')
+    _state(PLAYING), _spaceship(cv::Point(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)), _leave(false), _key('0')
 {
-    img = cv::Mat(WINDOW_HEIGHT, WINDOW_WIDTH, CV_8UC3, BKGRD_COLOR);
+    _img = cv::Mat(WINDOW_HEIGHT, WINDOW_WIDTH, CV_8UC3, BKGRD_COLOR);
 
-    if (asteroids.size() > MAX_ASTEROIDS)
+    if (_asteroids.size() > MAX_ASTEROIDS)
         numAsteroids = MAX_ASTEROIDS;
-    asteroids.reserve(numAsteroids);
+    _asteroids.reserve(numAsteroids);
     for (int i = 0; i < numAsteroids; ++i)
     {
         int rad = rand() % AVG_RADIUS + 10;
         cv::Point pos(rand() % WINDOW_WIDTH, rand() % WINDOW_HEIGHT/4);
         cv::Point vel(rand() % 7 - 3, rand() % 7 - 3);
         cv::Scalar col(rand() % 255, rand() % 255, rand() % 255);
-        asteroids.emplace_back(rad, pos, vel, col);
+        _asteroids.emplace_back(rad, pos, vel, col);
     }
 }
 
 void CAsteroidsGame::run()
 {
-    while (!leave)
+    while (!_leave)
     {
         update();
-        draw(img);
+        draw(_img);
     }
 }
 
 void CAsteroidsGame::update()
 {
-    key = cv::waitKey(DELAY);
-    userInput(key);
+    _key = cv::waitKey(DELAY);
+    userInput(_key);
     moveShip(WINDOW_WIDTH, WINDOW_HEIGHT);
     detectCollisions(); // should be done before moveLasers&asteroids, so there's less lasers to move
     moveLasers();
     moveAsteroids();
 }
 
-void CAsteroidsGame::draw(cv::Mat& img)
+void CAsteroidsGame::draw(cv::Mat& _img)
 {
-    img = BKGRD_COLOR;
+    _img = BKGRD_COLOR;
     drawText();
-    if (State == PLAYING)
+    if (_state == PLAYING)
     {
         drawShip();
         drawMissiles();
         drawAsteroids();
     }
     //drawDebug();
-    cv::imshow(WINDOW_NAME, img); // after all drawings
+    cv::imshow(WINDOW_NAME, _img); // after all drawings
 }
 
 void CAsteroidsGame::drawText()
 {
-    cv::putText(img, "Press 'l' to leave", cv::Point(WINDOW_WIDTH / 2 - 135, WINDOW_HEIGHT / 2 - 25), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 255), 2);
-    if (State == GAME_OVER)
-        cv::putText(img, "Game Over", cv::Point(WINDOW_WIDTH / 2 - 180, WINDOW_HEIGHT / 2 - 100), cv::FONT_HERSHEY_SIMPLEX, 2, cv::Scalar(255, 255, 255), 2);
+    cv::putText(_img, "Press 'l' to leave", cv::Point(WINDOW_WIDTH / 2 - 135, WINDOW_HEIGHT / 2 - 25), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 255), 2);
+    if (_state == GAME_OVER)
+        cv::putText(_img, "Game Over", cv::Point(WINDOW_WIDTH / 2 - 180, WINDOW_HEIGHT / 2 - 100), cv::FONT_HERSHEY_SIMPLEX, 2, cv::Scalar(255, 255, 255), 2);
 }
 
 void CAsteroidsGame::drawAsteroids()
 {
-    for (const asteroid& ast : asteroids)
-        cv::circle(img, ast.getPosition(), ast.getRadius(), ast.getColor(), 5);
+    for (const asteroid& ast : _asteroids)
+        cv::circle(_img, ast.getPosition(), ast.getRadius(), ast.getColor(), 5);
 }
 
 void CAsteroidsGame::drawShip()
 {
-    cv::circle(img, spaceship.getPosition(), SHIP_RADIUS, SHIP_COLOR, -1);
+    cv::circle(_img, _spaceship.getPosition(), SHIP_RADIUS, SHIP_COLOR, -1);
 }
 
 void CAsteroidsGame::drawMissiles()
 {
     cv::Point laser_position;
-    for (uint16_t i = 0; i < laser.size(); i++)
+    for (uint16_t i = 0; i < _laser.size(); i++)
     {
-        laser_position = laser[i].getPosition();
-        cv::line(img, laser_position, cv::Point(laser_position.x, laser_position.y - LENGTH_MISSILE), COLOR_LASER, THICK_LASER );
+        laser_position = _laser[i].getPosition();
+        cv::line(_img, laser_position, cv::Point(laser_position.x, laser_position.y - LENGTH_MISSILE), COLOR_LASER, THICK_LASER );
     }
 }
 
 void CAsteroidsGame::drawDebug()
 {
     // the next 2 lines are to troubleshoot: earlier, this showed lasers generated, but not drawn, or moved. They can be reused to troubleshoot missing graphics.
-    std::string lasers = std::to_string(laser.size());
-    cv::putText(img, lasers, cv::Point(WINDOW_WIDTH / 2 - 200, WINDOW_HEIGHT / 2 - 50), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 255), 1);
+    std::string lasers = std::to_string(_laser.size());
+    cv::putText(_img, lasers, cv::Point(WINDOW_WIDTH / 2 - 200, WINDOW_HEIGHT / 2 - 50), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 255), 1);
 }
 
 void CAsteroidsGame::userInput(char direction)
 {
-    cv::Point velocity = spaceship.getVelocity();
+    cv::Point velocity = _spaceship.getVelocity();
     switch (direction)
     {
     case 'w':
@@ -108,7 +108,7 @@ void CAsteroidsGame::userInput(char direction)
         generateLaser();
         break;
     case 'l':
-        leave = true;
+        _leave = true;
         break;
     }
 
@@ -116,13 +116,13 @@ void CAsteroidsGame::userInput(char direction)
     velocity.x = std::min(std::max(velocity.x, -max_velocity), max_velocity);
     velocity.y = std::min(std::max(velocity.y, -max_velocity), max_velocity);
 
-    spaceship.setVelocity(velocity);
+    _spaceship.setVelocity(velocity);
 }
 
-void CAsteroidsGame::moveShip(int window_width, int window_height)
+void CAsteroidsGame::moveShip(int window_width, int window_height) // update with frame logic?
 {
-    cv::Point position = spaceship.getPosition();
-    position += spaceship.getVelocity();
+    cv::Point position = _spaceship.getPosition();
+    position += _spaceship.getVelocity();
 
     // Wrap around if the spaceship goes off-screen
     if (position.x < 0) position.x = window_width;
@@ -130,41 +130,41 @@ void CAsteroidsGame::moveShip(int window_width, int window_height)
     if (position.y < 0) position.y = window_height;
     if (position.y > window_height) position.y = 0;
 
-    spaceship.setPosition(position);
+    _spaceship.setPosition(position);
 }
 
 void CAsteroidsGame::generateLaser()
 {
-    cv::Point shipPosition = spaceship.getPosition();
-    CAsteroidsGame::laser.push_back({LENGTH_MISSILE, shipPosition, cv::Point(0,SPEED_MISSILE)}); // missile(int len, cv::Point pos, cv::Point vel)
+    cv::Point shipPosition = _spaceship.getPosition();
+    CAsteroidsGame::_laser.push_back({LENGTH_MISSILE, shipPosition, cv::Point(0,SPEED_MISSILE)}); // missile(int len, cv::Point pos, cv::Point vel)
 }
 
-void CAsteroidsGame::moveLasers()
+void CAsteroidsGame::moveLasers() // update with frame logic?
 {
     // note: no need to wrap-around, cuz detectColision() will deal with the only possiblr border condition
     cv::Point laser_position;
-    for (uint16_t i = 0; i < laser.size(); i++)
+    for (uint16_t i = 0; i < _laser.size(); i++)
     {
-        laser_position = laser[i].getPosition() - laser[i].getVelocity();
-        laser[i].setPosition(laser_position);
+        laser_position = _laser[i].getPosition() - _laser[i].getVelocity();
+        _laser[i].setPosition(laser_position);
     }
 }
 
 void CAsteroidsGame::generateAsteroid()
 {
-    if (asteroids.size() < MAX_ASTEROIDS)
+    if (_asteroids.size() < MAX_ASTEROIDS)
     {
         int rad = rand() % 30 + 10;
         cv::Point pos(rand() % WINDOW_WIDTH, rand() % (WINDOW_HEIGHT/2));
         cv::Point vel( (rand() % 7 - 3)*ASTEROID_SPEED/100, (rand() % 7 - 3)*ASTEROID_SPEED/100 );
         cv::Scalar col(rand() % 255, rand() % 255, rand() % 255);
-        asteroids.push_back(asteroid(rad, pos, vel, col));
+        _asteroids.push_back(asteroid(rad, pos, vel, col));
     }
 }
 
-void CAsteroidsGame::moveAsteroids()
+void CAsteroidsGame::moveAsteroids() // update with frame logic?
 {
-    for (asteroid& ast : asteroids)
+    for (asteroid& ast : _asteroids)
     {
         cv::Point pos = ast.getPosition() + (ast.getVelocity()*ASTEROID_SPEED/100);
 
@@ -184,10 +184,10 @@ void CAsteroidsGame::detectCollisions() // future work: add flags so that u don'
 
     missileBoundary(); // collision
 
-    for (size_t i = 0; i < asteroids.size(); i++)   // look at one asteroid collide w/ any object
+    for (size_t i = 0; i < _asteroids.size(); i++)   // look at one asteroid collide w/ any object
     {
-        cv::Point posI = asteroids[i].getPosition();
-        int radI = asteroids[i].getRadius();
+        cv::Point posI = _asteroids[i].getPosition();
+        int radI = _asteroids[i].getRadius();
 
         asteroidAsteroid(i, posI, radI, collisionCount); // collision
 
@@ -204,11 +204,11 @@ void CAsteroidsGame::detectCollisions() // future work: add flags so that u don'
 void CAsteroidsGame::missileBoundary()
 {
     cv::Point laser_position;
-    for (uint16_t i = 0; i < laser.size(); i++)
+    for (uint16_t i = 0; i < _laser.size(); i++)
     {
-        laser_position = laser[i].getPosition();
+        laser_position = _laser[i].getPosition();
         if( laser_position.y <= 0 )
-            laser.erase(laser.begin() + i); // cherno says this is how to erase
+            _laser.erase(_laser.begin() + i); // cherno says this is how to erase
     }
 }
 
@@ -217,16 +217,16 @@ void CAsteroidsGame::asteroidAsteroid(size_t asteroidNo, cv::Point asteroidPos, 
     int i = asteroidNo;
     cv::Point posI = asteroidPos;
     int radI = asteroidRad;
-    for (size_t j = i+1; j < asteroids.size(); j++)
+    for (size_t j = i+1; j < _asteroids.size(); j++)
     {
-        cv::Point posJ = asteroids[j].getPosition();
-        int radJ = asteroids[j].getRadius();
+        cv::Point posJ = _asteroids[j].getPosition();
+        int radJ = _asteroids[j].getRadius();
         double distance = cv::norm(posI-posJ); // compare asteroid "I" to each other asteroid
         if (distance <= (radI + radJ))
         {
-            asteroids.erase(asteroids.begin() + i);
-            asteroids.erase(asteroids.begin() + j - 1);
-            j = asteroids.size(); // exit for-loop
+            _asteroids.erase(_asteroids.begin() + i);
+            _asteroids.erase(_asteroids.begin() + j - 1);
+            j = _asteroids.size(); // exit for-loop
             collisionCount += 2;
         }
     }
@@ -235,14 +235,14 @@ void CAsteroidsGame::asteroidAsteroid(size_t asteroidNo, cv::Point asteroidPos, 
 void CAsteroidsGame::asteroidMissile(size_t asteroidNo, cv::Point asteroidPos, int asteroidRad, int& collisionCount)
 {
     cv::Point laser_position;
-    for (uint16_t i = 0; i < laser.size(); i++)
+    for (uint16_t i = 0; i < _laser.size(); i++)
     {
-        laser_position = laser[i].getPosition() + cv::Point(0,LENGTH_MISSILE);
+        laser_position = _laser[i].getPosition() + cv::Point(0,LENGTH_MISSILE);
         double distance = cv::norm(asteroidPos-laser_position);
         if( distance <= asteroidRad )
         {
-            laser.erase(laser.begin() + i);
-            asteroids.erase(asteroids.begin() + asteroidNo);
+            _laser.erase(_laser.begin() + i);
+            _asteroids.erase(_asteroids.begin() + asteroidNo);
             collisionCount++;
         }
     }
@@ -252,7 +252,7 @@ void CAsteroidsGame::asteroidShip(cv::Point asteroidPos, int asteroidRad)
 {
     cv::Point posI = asteroidPos;
     int radI = asteroidRad;
-    cv::Point posJ = spaceship.getPosition();
+    cv::Point posJ = _spaceship.getPosition();
     int radJ = SHIP_RADIUS;
 
     double distance = cv::norm(posI-posJ); // compare asteroid "I" to each other asteroid
@@ -262,9 +262,9 @@ void CAsteroidsGame::asteroidShip(cv::Point asteroidPos, int asteroidRad)
 
 void CAsteroidsGame::loseGame()
 {
-    asteroids.clear();
-    laser.clear();
-    State = GAME_OVER;
+    _asteroids.clear();
+    _laser.clear();
+    _state = GAME_OVER;
 }
 
 
